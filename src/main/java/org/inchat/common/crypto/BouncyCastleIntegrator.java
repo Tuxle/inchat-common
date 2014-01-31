@@ -19,10 +19,6 @@
 package org.inchat.common.crypto;
 
 import java.security.Security;
-import org.bouncycastle.crypto.engines.AESFastEngine;
-import org.bouncycastle.crypto.modes.CBCBlockCipher;
-import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
-import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
@@ -40,7 +36,7 @@ public class BouncyCastleIntegrator {
      */
     public static void initBouncyCastleProvider() {
         if (Security.getProvider(PROVIDER_NAME) == null) {
-            Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+            Security.addProvider(new BouncyCastleProvider());
         }
     }
 }
