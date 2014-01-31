@@ -23,13 +23,11 @@ import static org.junit.Assert.*;
 
 public class AesKeyGeneratorTest {
 
-    private final int MINIMAL_KEY_LENGTH_IN_BYTES = 16;
-
     @Test
-    public void testGenerateAesKeyOnNegativeAndSmallLengths() {
-        for (int i = -10; i < MINIMAL_KEY_LENGTH_IN_BYTES; i++) {
+    public void testGenerateKeyOnNegativeAndSmallLengths() {
+        for (int i = -10; i < AesKeyGenerator.MINIMAL_KEY_LENGTH_IN_BYTES; i++) {
             try {
-                AesKeyGenerator.generateAesKey(i);
+                AesKeyGenerator.generateKey(i);
             } catch (IllegalArgumentException ex) {
                 continue;
             }
@@ -38,14 +36,21 @@ public class AesKeyGeneratorTest {
     }
 
     @Test
-    public void testGenerateAesKeyOnValidLengths() {
-        for (int i = MINIMAL_KEY_LENGTH_IN_BYTES; i < 2 * MINIMAL_KEY_LENGTH_IN_BYTES; i++) {
+    public void testGenerateKeyOnValidLengths() {
+        for (int i = AesKeyGenerator.MINIMAL_KEY_LENGTH_IN_BYTES; i < 2 * AesKeyGenerator.MINIMAL_KEY_LENGTH_IN_BYTES; i++) {
             try {
-                AesKeyGenerator.generateAesKey(i);
+                byte[] output = AesKeyGenerator.generateKey(i);
+                assertEquals(i, output.length);
             } catch (IllegalArgumentException ex) {
-                fail ("This key should be generatable.");
+                fail("This key should be generatable, but the exception sais: " + ex.getMessage());
             }
         }
+    }
+
+    @Test
+    public void testGenerateInitializationVectorOnValidLengths() {
+        byte[] output = AesKeyGenerator.generateInitializationVector();
+        assertEquals(AesKeyGenerator.IV_LENGTH_IN_BYTES, output.length);
     }
 
 }

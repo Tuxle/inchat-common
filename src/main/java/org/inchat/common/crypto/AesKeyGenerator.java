@@ -24,13 +24,13 @@ import javax.crypto.KeyGenerator;
 
 public class AesKeyGenerator {
 
-    private final static String ALGORITHM_NAME = "AES";
-    private final static int IV_LENGTH_IN_BYTES = 16;
-    private final static int MINIMUM_KEY_LENGTH_IN_BYTES = 16;
+    public final static String ALGORITHM_NAME = "AES";
+    public final static int IV_LENGTH_IN_BYTES = 16;
+    public final static int MINIMAL_KEY_LENGTH_IN_BYTES = 16;
 
-    public static byte[] generateAesKey(int lengthInBytes) {
-        if (lengthInBytes < MINIMUM_KEY_LENGTH_IN_BYTES) {
-            throw new IllegalArgumentException("The length has to be at least " + MINIMUM_KEY_LENGTH_IN_BYTES + " bytes.");
+    public static byte[] generateKey(int lengthInBytes) {
+        if (lengthInBytes < MINIMAL_KEY_LENGTH_IN_BYTES) {
+            throw new IllegalArgumentException("The length has to be at least " + MINIMAL_KEY_LENGTH_IN_BYTES + " bytes.");
         }
 
         try {
@@ -44,7 +44,7 @@ public class AesKeyGenerator {
     }
 
     public static byte[] generateInitializationVector() {
-        return generateAesKey(IV_LENGTH_IN_BYTES);
+        return generateKey(IV_LENGTH_IN_BYTES);
     }
 
 }
