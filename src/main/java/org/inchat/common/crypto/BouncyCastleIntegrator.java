@@ -39,10 +39,8 @@ public class BouncyCastleIntegrator {
      * nothing changes.
      */
     public static void initBouncyCastleProvider() {
-        if (Security.getProvider(PROVIDER_NAME) != null) {
-            return;
+        if (Security.getProvider(PROVIDER_NAME) == null) {
+            Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         }
-
-        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
     }
 }
