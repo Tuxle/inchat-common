@@ -28,14 +28,15 @@ import java.security.SecureRandom;
  * This class generates key pairs for RSA. It uses {@link SecureRandom} as
  * entropy source.
  */
-public class RsaKeyGenerator {
+public class RsaKeyPairGenerator {
 
     public final static String ALGORITHM_NAME = "RSA";
     public final static int MINIMAL_KEY_SIZE_IN_BITS = 2048;
 
     /**
      * Generates a {@link KeyPair} of the given size. The {@code keySizeInBits}
-     * has to be at lest 2048 bits.
+     * has to be at lest 2048 bits. {@link SecureRandom} is used as entropy
+     * source.
      *
      * @param keySizeInBits The key size.
      * @return Generated KeyPair, ready for usage.
@@ -44,7 +45,7 @@ public class RsaKeyGenerator {
      * @throws IllegalStateException If something goes wrong during generating
      * the keys.
      */
-    public static KeyPair generateKeys(int keySizeInBits) {
+    public static KeyPair generateKeyPair(int keySizeInBits) {
         if (keySizeInBits < MINIMAL_KEY_SIZE_IN_BITS) {
             throw new IllegalArgumentException("The key size has to be at least " + MINIMAL_KEY_SIZE_IN_BITS + " bits.");
         }
@@ -57,7 +58,7 @@ public class RsaKeyGenerator {
             generator.initialize(keySizeInBits, random);
             return generator.generateKeyPair();
         } catch (NoSuchAlgorithmException | NoSuchProviderException ex) {
-            throw new IllegalStateException("Could not generate RSA Keys: " + ex.getMessage());
+            throw new IllegalStateException("Could not generate RSA KeyPair: " + ex.getMessage());
         }
     }
 }
