@@ -18,6 +18,7 @@
  */
 package org.inchat.common.crypto;
 
+import java.security.KeyPair;
 import java.security.Security;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -25,6 +26,7 @@ import org.junit.Before;
 
 public class RsaOaepCipherTest {
 
+    private final int KEY_PAIR_SIZE_IN_BITS = 2048;
     private RsaOaepCipher cipher;
     private byte[] privateKey;
     private byte[] publicKey;
@@ -35,10 +37,9 @@ public class RsaOaepCipherTest {
 
     @Before
     public void setUp() {
-        plaintext = "testtext".getBytes();
-
-        privateKey = "myPulicKey".getBytes();
-        publicKey = "mySecretsdfasdfaKey".getBytes();
+        plaintext = "this is a very long plaintext text that we want to encrypt and decrypt".getBytes();
+        privateKey = "myPublicKey".getBytes();
+        publicKey = "mySecretKey".getBytes();
         isPublicKeyForEncryption = true;
 
         cipher = new RsaOaepCipher(privateKey, publicKey, isPublicKeyForEncryption);
@@ -88,9 +89,62 @@ public class RsaOaepCipherTest {
         output = cipher.encrypt(null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testDecryptOnNull() {
+        output = cipher.decrypt(null);
+    }
+
     @Test
-    public void testEncrypt() {
-        output = cipher.encrypt(plaintext);
+    public void testEncryptAndDecrypt() {
+        intiCipherWithGeneratedKeyPair();
+
+        // Encrypt
+        ciphertext = cipher.encrypt(plaintext);
+        assertNotNull(ciphertext);
+
+        // Decrypt with the same, already initalized cipher
+        output = cipher.decrypt(ciphertext);
+        assertArrayEquals(plaintext, output);
+
+        // Decrypt with a new cipher
+        cipher = new RsaOaepCipher(privateKey, publicKey, isPublicKeyForEncryption);
+        output = cipher.decrypt(ciphertext);
+        assertArrayEquals(plaintext, output);
+    }
+
+    @Test
+    public void testEncryptAndDecryptSeveralTextLengths() {
+        int maximalRepeats = 10;
+        intiCipherWithGeneratedKeyPair();
+
+        for (int i = 0; i <= maximalRepeats; i++) {
+            // Encrypt
+            plaintext = generateStringByLength(i).getBytes();
+            ciphertext = cipher.encrypt(plaintext);
+            assertNotNull(ciphertext);
+
+            // Decrypt with the same, already initalized cipher
+            output = cipher.decrypt(ciphertext);
+            assertArrayEquals(plaintext, output);
+        }
+    }
+
+    private String generateStringByLength(int length) {
+        String assembly = "";
+        String charachter = "AAAAAAAAAAbbbbbbbbbbbbccccccccccccccddddddddddddddeeeeeeeeeeeeeeefffffffffffffff";
+
+        for (int i = 0; i <= length; i++) {
+            assembly += charachter;
+        }
+
+        return assembly;
+    }
+
+    private void intiCipherWithGeneratedKeyPair() {
+        KeyPair keyPair = RsaKeyPairGenerator.generateKeyPair(KEY_PAIR_SIZE_IN_BITS);
+        privateKey = keyPair.getPrivate().getEncoded();
+        publicKey = keyPair.getPublic().getEncoded();
+        cipher = new RsaOaepCipher(privateKey, publicKey, isPublicKeyForEncryption);
     }
 
 }

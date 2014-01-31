@@ -20,16 +20,14 @@ package org.inchat.common.crypto;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bouncycastle.crypto.AsymmetricBlockCipher;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.encodings.OAEPEncoding;
 import org.bouncycastle.crypto.engines.RSAEngine;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
+import org.bouncycastle.crypto.util.PrivateKeyFactory;
 import org.bouncycastle.crypto.util.PublicKeyFactory;
-import org.bouncycastle.jcajce.provider.asymmetric.rsa.CipherSpi;
 
 /**
  * This {@link Cipher} encrypts and decrypts using the {@link RSAEngine} and
@@ -43,6 +41,15 @@ public class RsaOaepCipher implements Cipher {
     byte[] publicKey;
     boolean isPublicKeyForEncryption;
 
+    /**
+     * This Cipher can be used to asymmetrically encrypt and decrypt data.
+     *
+     * @param privateKey May not be null.
+     * @param publicKey Many not be null.
+     * @param isPublicKeyForEncryption Tells if the given public key is used for
+     * encryption or decryption (encryption vs. signing).
+     * @throws IllegalArgumentException If the arguments are null.
+     */
     public RsaOaepCipher(byte[] privateKey, byte[] publicKey, boolean isPublicKeyForEncryption) {
         if (privateKey == null || publicKey == null) {
             throw new IllegalArgumentException("The arguments may not be null.");
@@ -60,6 +67,14 @@ public class RsaOaepCipher implements Cipher {
         cipher = new OAEPEncoding(new RSAEngine(), new SHA256Digest());
     }
 
+    /**
+     * Encrypts the given plaintext using the initialized key material.
+     *
+     * @param plaintext The plaintext to encrypt. This may not be null.
+     * @return The ciphertext.
+     * @throws IllegalArgumentException If the argument is null.
+     * @throws EncryptionException If something goes wrong during encryption.
+     */
     @Override
     public byte[] encrypt(byte[] plaintext) {
         if (plaintext == null) {
@@ -84,9 +99,36 @@ public class RsaOaepCipher implements Cipher {
         return isPublicKeyForEncryption ? publicKey : privateKey;
     }
 
+    /**
+     * Decrypts the given ciphertext using the initialized key material.
+     *
+     * @param ciphertext The ciphertext to decrypt. This may not be null.
+     * @return The plaintext.
+     * @throws IllegalArgumentException If the argument is null.
+     * @throws DecryptionException If something goes wrong during decryption.
+     */
     @Override
     public byte[] decrypt(byte[] ciphertext) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (ciphertext == null) {
+            throw new IllegalArgumentException("The argument may not be null.");
+        }
+
+        try {
+            initCipherForDecryption(getDecryptionKey());
+            return processCryptographicOperation(ciphertext);
+        } catch (IOException | InvalidCipherTextException ex) {
+            throw new DecryptionException("Could not decrypt the ciphertext: " + ex.getMessage());
+        }
+    }
+
+    private void initCipherForDecryption(byte[] keyToUse) throws IOException {
+        boolean isForEncryption = false;
+        parameters = PrivateKeyFactory.createKey(keyToUse);
+        cipher.init(isForEncryption, parameters);
+    }
+
+    private byte[] getDecryptionKey() {
+        return isPublicKeyForEncryption ? privateKey : publicKey;
     }
 
     private byte[] processCryptographicOperation(byte[] toProcess) throws InvalidCipherTextException {
