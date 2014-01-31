@@ -32,9 +32,12 @@ public class BouncyCastleIntegratorTest {
 
     @Test
     public void testInitBouncyCasteProvider() {
+        if (Security.getProvider(BouncyCastleIntegrator.PROVIDER_NAME) != null) {
+            Security.removeProvider(BouncyCastleIntegrator.PROVIDER_NAME);
+        }
+
         assertNull(Security.getProvider(BouncyCastleIntegrator.PROVIDER_NAME));
         BouncyCastleIntegrator.initBouncyCastleProvider();
         assertNotNull(Security.getProvider(BouncyCastleIntegrator.PROVIDER_NAME));
     }
-
 }
