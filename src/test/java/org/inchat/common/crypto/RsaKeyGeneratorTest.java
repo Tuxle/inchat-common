@@ -18,17 +18,30 @@
  */
 package org.inchat.common.crypto;
 
+import java.security.KeyPair;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class RsaKeyGeneratorTest {
 
-    public RsaKeyGeneratorTest() {
+    @Test
+    public void testGenerateKeysOnNegativeAndSmallKeySizes() {
+        for (int i = -100; i < RsaKeyGenerator.MINIMAL_KEY_SIZE_IN_BITS; i++) {
+            try {
+                RsaKeyGenerator.generateKeys(i);
+                fail("Keys with the size of " + i + " bits should not be generatable.");
+            } catch (IllegalArgumentException ex) {
+            }
+        }
     }
 
     @Test
-    public void testSomeMethod() {
-        fail();
+    public void testGenerateKeysOnValidSize() {
+        KeyPair keyPair = RsaKeyGenerator.generateKeys(RsaKeyGenerator.MINIMAL_KEY_SIZE_IN_BITS);
+
+        assertNotNull(keyPair);
+        assertNotNull(keyPair.getPublic().getEncoded());
+        assertNotNull(keyPair.getPrivate().getEncoded());
     }
 
 }
