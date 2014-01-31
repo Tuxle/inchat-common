@@ -22,12 +22,25 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import javax.crypto.KeyGenerator;
 
+/**
+ * This class generates AES keys and initialization vectors.
+ */
 public class AesKeyGenerator {
 
     public final static String ALGORITHM_NAME = "AES";
     public final static int IV_LENGTH_IN_BYTES = 16;
     public final static int MINIMAL_KEY_LENGTH_IN_BYTES = 16;
 
+    /**
+     * Generates a AES key.
+     *
+     * @param lengthInBytes Has to be at least 16 bytes.
+     * @return The generated key.
+     * @throws IllegalArgumentException If the {@code lengthInBytes} does not
+     * fulfill the length requirements.
+     * @throws IllegalStateException If something goes wrong during key
+     * generation.
+     */
     public static byte[] generateKey(int lengthInBytes) {
         if (lengthInBytes < MINIMAL_KEY_LENGTH_IN_BYTES) {
             throw new IllegalArgumentException("The length has to be at least " + MINIMAL_KEY_LENGTH_IN_BYTES + " bytes.");
@@ -43,8 +56,12 @@ public class AesKeyGenerator {
         }
     }
 
+    /**
+     * Generates initialization vectors for AES.
+     *
+     * @return The generated initialization vector.
+     */
     public static byte[] generateInitializationVector() {
         return generateKey(IV_LENGTH_IN_BYTES);
     }
-
 }
