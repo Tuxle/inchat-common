@@ -18,6 +18,7 @@
  */
 package org.inchat.common;
 
+import org.inchat.common.crypto.CipherSuite;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;

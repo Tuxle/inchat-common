@@ -18,6 +18,8 @@
  */
 package org.inchat.common;
 
+import org.inchat.common.crypto.CipherSuite;
+
 /**
  * A message contains all necessary information to transport the content to the
  * targeted participant. This also includes key material for the encryption and
