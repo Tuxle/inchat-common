@@ -26,7 +26,17 @@ import java.util.UUID;
  */
 public class Participant {
 
-    UUID id;
+    UUID id = null;
+
+    public Participant() {
+    }
+
+    public Participant(UUID newUUID) {
+        if (newUUID==null){
+            throw new IllegalArgumentException("Argument must not be NULL!");
+        }
+        id = newUUID;
+    }
 
     /**
      * Sets the id.
