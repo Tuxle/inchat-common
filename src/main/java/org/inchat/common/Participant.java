@@ -28,6 +28,10 @@ public class Participant {
 
     UUID id;
 
+    public Participant(UUID newUUID) {
+        id = newUUID;
+    }
+
     /**
      * Sets the id.
      *
