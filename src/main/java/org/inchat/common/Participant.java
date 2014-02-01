@@ -26,7 +26,10 @@ import java.util.UUID;
  */
 public class Participant {
 
-    UUID id;
+    UUID id = null;
+
+    public Participant() {
+    }
 
     public Participant(UUID newUUID) {
         id = newUUID;
