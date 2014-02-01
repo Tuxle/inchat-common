@@ -32,6 +32,9 @@ public class Participant {
     }
 
     public Participant(UUID newUUID) {
+        if (newUUID==null){
+            throw new IllegalArgumentException("Argument must not be NULL!");
+        }
         id = newUUID;
     }
 

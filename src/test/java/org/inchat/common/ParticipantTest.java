@@ -51,4 +51,15 @@ public class ParticipantTest {
         assertEquals(id, participant.getId());
     }
 
+    @Test
+    public void testAdditionalConstructor() {
+        participant = new Participant(id);
+        assertEquals(id, participant.getId());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullConstructor() {
+        participant = new Participant(null);
+    }
+
 }
