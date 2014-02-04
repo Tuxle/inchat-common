@@ -18,40 +18,32 @@
  */
 package org.inchat.common.crypto;
 
-import java.security.KeyPair;
-import java.security.Security;
-import org.junit.Test;
+import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.jce.ECNamedCurveTable;
+import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
+import static org.inchat.common.crypto.EccKeyPairGenerator.SEC_CURVE_NAME;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class EccKeyPairGeneratorTest {
 
-    private final static String EXPECTED_PRIVATE_KEY_FORMAT = "PKCS#8";
-    private final static String EXPECTED_PUBLIC_KEY_FORMAT = "X.509";
-    private final static int EXPECTED_PRIVATE_KEY_LENGTH_IN_BYTES = 194;
-    private final static int EXPECTED_PUBLIC_KEY_LENGTH_IN_BYTES = 120;
-    private KeyPair keyPair;
+    private AsymmetricCipherKeyPair keyPair;
 
     @Test
-    public void testGenerateOnBcProvider() {
-        Security.removeProvider(BouncyCastleIntegrator.PROVIDER_NAME);
-
+    public void testGenerate() {
         keyPair = EccKeyPairGenerator.generate();
+        assertNotNull(keyPair);
     }
 
     @Test
-    public void testGenerateOnLenghts() {
+    public void testGenerateOnCurveName() {
         keyPair = EccKeyPairGenerator.generate();
+        ECPrivateKeyParameters privateKey = (ECPrivateKeyParameters) keyPair.getPrivate();
+        ECNamedCurveParameterSpec expectedParameterSpec = ECNamedCurveTable.getParameterSpec(SEC_CURVE_NAME);
 
-        assertEquals(EXPECTED_PRIVATE_KEY_LENGTH_IN_BYTES, keyPair.getPrivate().getEncoded().length);
-        assertEquals(EXPECTED_PUBLIC_KEY_LENGTH_IN_BYTES, keyPair.getPublic().getEncoded().length);
+        assertEquals(expectedParameterSpec.getG(), privateKey.getParameters().getG());
+        assertEquals(expectedParameterSpec.getH(), privateKey.getParameters().getH());
+        assertEquals(expectedParameterSpec.getN(), privateKey.getParameters().getN());
     }
-
-    @Test
-    public void testGenerateOnFormat() {
-        keyPair = EccKeyPairGenerator.generate();
-
-        assertEquals(EXPECTED_PRIVATE_KEY_FORMAT, keyPair.getPrivate().getFormat());
-        assertEquals(EXPECTED_PUBLIC_KEY_FORMAT, keyPair.getPublic().getFormat());
-    }
-
 }

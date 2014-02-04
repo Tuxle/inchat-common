@@ -18,28 +18,25 @@
  */
 package org.inchat.common.crypto;
 
-import java.security.KeyPair;
+import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import static org.hamcrest.CoreMatchers.*;
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;
 
 public class EccCipherTest {
-    private final String EXPECTED_IE_KEY_NAME = "IES";
-    private final int EXPECTED_MAC_KEY_SIZE = 128;
-    private final int NUMBER_OF_ENCRYPTIONS = 10;
-    private final int EXPECTED_PLAINTEXT_CIPHERTEXT_DELTA_BYTES = 20;
+
+    private final int NUMBER_OF_ENCRYPTIONS = 50;
     private EccCipher cipher;
-    private byte[] privateKey;
-    private byte[] publicKey;
+    private AsymmetricCipherKeyPair localKeyPair;
+    private AsymmetricCipherKeyPair remoteKeyPair;
 
     @Before
     public void setUp() {
-        KeyPair keyPair = EccKeyPairGenerator.generate();
-        privateKey = keyPair.getPrivate().getEncoded();
-        publicKey = keyPair.getPublic().getEncoded();
+        localKeyPair = EccKeyPairGenerator.generate();
+        remoteKeyPair = EccKeyPairGenerator.generate();
 
-        cipher = new EccCipher(privateKey, publicKey);
+        cipher = new EccCipher(localKeyPair, remoteKeyPair);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -49,24 +46,23 @@ public class EccCipherTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorOnNullPrivateKey() {
-        cipher = new EccCipher(null, publicKey);
+        cipher = new EccCipher(null, remoteKeyPair);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorOnNullPublicKey() {
-        cipher = new EccCipher(privateKey, null);
+        cipher = new EccCipher(localKeyPair, null);
     }
 
     @Test
     public void testConstructorOnAllocation() {
-        assertArrayEquals(privateKey, cipher.privateKey.getEncoded());
-        assertArrayEquals(publicKey, cipher.publicKey.getEncoded());
+        assertEquals(localKeyPair, cipher.localKeyPair);
+        assertEquals(remoteKeyPair, cipher.remoteKeyPair);
     }
 
     @Test
     public void testConstructorOnCreatingCipher() {
-         assertEquals(EXPECTED_IE_KEY_NAME, cipher.ieKeySpecification.getAlgorithm());
-         assertEquals(EXPECTED_MAC_KEY_SIZE, cipher.iesParameterSpecification.getMacKeySize());
+        assertNotNull(cipher.iesEngine);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -92,7 +88,6 @@ public class EccCipherTest {
 
             ciphertext = cipher.encrypt(plaintext);
             assertThat(workingText, not(equalTo(new String(ciphertext))));
-            assertEquals(EXPECTED_PLAINTEXT_CIPHERTEXT_DELTA_BYTES, ciphertext.length - plaintext.length);
 
             output = cipher.decrypt(ciphertext);
             assertArrayEquals(plaintext, output);

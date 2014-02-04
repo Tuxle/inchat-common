@@ -1,4 +1,4 @@
-    /*
+/*
  * Copyright (C) 2013, 2014 inchat.org
  *
  * This file is part of inchat-common.
@@ -18,27 +18,37 @@
  */
 package org.inchat.common.crypto;
 
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-import java.security.spec.ECGenParameterSpec;
+import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
+import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECKeyGenerationParameters;
+import org.bouncycastle.jce.ECNamedCurveTable;
+import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 
+/**
+ * This Generator generates {@link AsymmetricCipherKeyPair}s for ECIES
+ * encryption and decryption.
+ */
 public class EccKeyPairGenerator {
 
-    public static KeyPair generate() {
-        BouncyCastleIntegrator.initBouncyCastleProvider();
+    public final static String SEC_CURVE_NAME = "secp384r1";
 
-        try {
-            ECGenParameterSpec parameters = new ECGenParameterSpec(EccCipher.CURVE_NAME);
-            KeyPairGenerator generator = KeyPairGenerator.getInstance(EccCipher.ALGORITHM_NAME, BouncyCastleIntegrator.PROVIDER_NAME);
-            generator.initialize(parameters, new SecureRandom());
-            return generator.generateKeyPair();
-        } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException ex) {
-            throw new IllegalStateException("Could not generate a ECC key pair: " + ex.getMessage());
-        }
+    /**
+     * Generates a new {@link AsymmetricCipherKeyPair} for the ECC curve
+     * {@code secp384r1}.
+     *
+     * @return The key pair.
+     */
+    public static AsymmetricCipherKeyPair generate() {
+        ECNamedCurveParameterSpec parameterSpec = ECNamedCurveTable.getParameterSpec(SEC_CURVE_NAME);
+        ECDomainParameters domainParameters = new ECDomainParameters(parameterSpec.getCurve(), parameterSpec.getG(), parameterSpec.getN());
+        ECKeyPairGenerator keyPairGenerator = new ECKeyPairGenerator();
+        ECKeyGenerationParameters generationParameters = new ECKeyGenerationParameters(domainParameters, new SecureRandom());
+
+        keyPairGenerator.init(generationParameters);
+
+        return keyPairGenerator.generateKeyPair();
     }
 
 }
