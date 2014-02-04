@@ -18,7 +18,6 @@
  */
 package org.inchat.common;
 
-import org.inchat.common.crypto.CipherSuite;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -27,7 +26,6 @@ public class MessageTest {
 
     private Message message;
     private Participant participant;
-    private CipherSuite cipherSuite;
     private byte[] initializationVector;
     private byte[] key;
     private byte[] content;
@@ -37,7 +35,6 @@ public class MessageTest {
     public void setUp() {
         message = new Message();
         participant = new Participant();
-        cipherSuite = CipherSuite.NONE;
         initializationVector = new byte[0];
         key = new byte[0];
         mac = new byte[0];
@@ -59,23 +56,6 @@ public class MessageTest {
     public void testGetParticipant() {
         message.participant = participant;
         assertSame(participant, message.getParticipant());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetCipherSuiteOnNull() {
-        message.setCipherSuite(null);
-    }
-
-    @Test
-    public void testSetCipherSuite() {
-        message.setCipherSuite(cipherSuite);
-        assertSame(cipherSuite, message.cipherSuite);
-    }
-
-    @Test
-    public void testGetCipherSuite() {
-        message.cipherSuite = cipherSuite;
-        assertSame(cipherSuite, message.getCipherSuite());
     }
 
     @Test(expected = IllegalArgumentException.class)

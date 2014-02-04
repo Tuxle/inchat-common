@@ -18,8 +18,6 @@
  */
 package org.inchat.common;
 
-import org.inchat.common.crypto.CipherSuite;
-
 /**
  * A message contains all necessary information to transport the content to the
  * targeted participant. This also includes key material for the encryption and
@@ -28,7 +26,6 @@ import org.inchat.common.crypto.CipherSuite;
 public class Message {
 
     Participant participant;
-    CipherSuite cipherSuite;
     byte[] initializationVector;
     byte[] key;
     byte[] content;
@@ -50,24 +47,6 @@ public class Message {
 
     public Participant getParticipant() {
         return participant;
-    }
-
-    /**
-     * Sets the cipherSuite.
-     *
-     * @param cipherSuite
-     * @throws IllegalArgumentException If the argument is null.
-     */
-    public void setCipherSuite(CipherSuite cipherSuite) {
-        if (cipherSuite == null) {
-            throw new IllegalArgumentException("The argument may not be null.");
-        }
-
-        this.cipherSuite = cipherSuite;
-    }
-
-    public CipherSuite getCipherSuite() {
-        return cipherSuite;
     }
 
     /**
