@@ -55,7 +55,7 @@ public class EccCipherTest {
     }
 
     @Test
-    public void testConstructorOnAllocation() {
+    public void testConstructorOnAssignment() {
         assertEquals(localKeyPair, cipher.localKeyPair);
         assertEquals(remoteKeyPair, cipher.remoteKeyPair);
     }
