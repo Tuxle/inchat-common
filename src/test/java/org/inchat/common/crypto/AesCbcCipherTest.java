@@ -110,7 +110,7 @@ public class AesCbcCipherTest {
     }
 
     @Test
-    public void testConstructorOnParameterAssignments() {
+    public void testConstructorOnAssignments() {
         cipher = new AesCbcCipher(initializationVector, key);
 
         assertNotNull(cipher.parameters);
