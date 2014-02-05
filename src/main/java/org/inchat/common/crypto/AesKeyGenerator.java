@@ -46,8 +46,9 @@ public class AesKeyGenerator {
             throw new IllegalArgumentException("The length has to be at least " + MINIMAL_KEY_LENGTH_IN_BYTES + " bytes.");
         }
 
+        BouncyCastleIntegrator.initBouncyCastleProvider();
+
         try {
-            BouncyCastleIntegrator.initBouncyCastleProvider();
             KeyGenerator keyGenerator = KeyGenerator.getInstance(ALGORITHM_NAME, BouncyCastleIntegrator.PROVIDER_NAME);
             keyGenerator.init(lengthInBytes * 8);
             return keyGenerator.generateKey().getEncoded();

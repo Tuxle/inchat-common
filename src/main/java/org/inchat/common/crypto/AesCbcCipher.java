@@ -105,11 +105,9 @@ public class AesCbcCipher implements Cipher {
             int processedBytes = cipher.processBytes(plaintext, 0, plaintext.length, outputBuffer, 0);
             processedBytes += cipher.doFinal(outputBuffer, processedBytes);
             return copyContentBytes(outputBuffer, processedBytes);
-        }
-        catch (IllegalArgumentException | DataLengthException | IllegalStateException | InvalidCipherTextException ex) {
+        } catch (IllegalArgumentException | DataLengthException | IllegalStateException | InvalidCipherTextException ex) {
             throw new EncryptionException("Could not encrypt the plaintext: " + ex.getMessage());
         }
-
     }
 
     private void initCipherForEncryption() {
@@ -138,8 +136,7 @@ public class AesCbcCipher implements Cipher {
             int processedBytes = cipher.processBytes(ciphertext, 0, ciphertext.length, outputBuffer, 0);
             processedBytes += cipher.doFinal(outputBuffer, processedBytes);
             return copyContentBytes(outputBuffer, processedBytes);
-        }
-        catch (IllegalArgumentException | DataLengthException | IllegalStateException | InvalidCipherTextException ex) {
+        } catch (IllegalArgumentException | DataLengthException | IllegalStateException | InvalidCipherTextException ex) {
             throw new DecryptionException("Could not decrypt the ciphertext: " + ex.getMessage());
         }
     }

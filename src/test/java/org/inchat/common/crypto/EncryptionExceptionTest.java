@@ -18,31 +18,20 @@
  */
 package org.inchat.common.crypto;
 
-import java.security.Security;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class BouncyCastleIntegratorTest {
+public class EncryptionExceptionTest {
 
     @Test
-    public void testInstatiation() {
-        BouncyCastleIntegrator integrator = new BouncyCastleIntegrator();
-    }
+    public void testArgumentHandover() {
+        String message = "myArgumentMessage";
 
-    @Test
-    public void testProviderName() {
-        assertEquals(BouncyCastleProvider.PROVIDER_NAME, BouncyCastleIntegrator.PROVIDER_NAME);
-    }
-
-    @Test
-    public void testInitBouncyCasteProvider() {
-        if (Security.getProvider(BouncyCastleIntegrator.PROVIDER_NAME) != null) {
-            Security.removeProvider(BouncyCastleIntegrator.PROVIDER_NAME);
+        try {
+            throw new EncryptionException(message);
+        } catch (EncryptionException ex) {
+            assertEquals(message, ex.getMessage());
         }
-
-        assertNull(Security.getProvider(BouncyCastleIntegrator.PROVIDER_NAME));
-        BouncyCastleIntegrator.initBouncyCastleProvider();
-        assertNotNull(Security.getProvider(BouncyCastleIntegrator.PROVIDER_NAME));
     }
+
 }

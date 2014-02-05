@@ -31,6 +31,11 @@ public class EccKeyPairGeneratorTest {
     private AsymmetricCipherKeyPair keyPair;
 
     @Test
+    public void testInstantiation() {
+        EccKeyPairGenerator generator = new EccKeyPairGenerator();
+    }
+
+    @Test
     public void testGenerate() {
         keyPair = EccKeyPairGenerator.generate();
         assertNotNull(keyPair);

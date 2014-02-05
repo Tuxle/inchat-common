@@ -18,10 +18,20 @@
  */
 package org.inchat.common.crypto;
 
-public class EncodingException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-    public EncodingException(String message) {
-        super(message);
+public class DecryptionExceptionTest {
+
+    @Test
+    public void testArgumentHandover() {
+        String message = "myArgumentMessage";
+
+        try {
+            throw new DecryptionException(message);
+        } catch (DecryptionException ex) {
+            assertEquals(message, ex.getMessage());
+        }
     }
+
 }

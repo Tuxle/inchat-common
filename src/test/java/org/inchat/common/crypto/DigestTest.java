@@ -39,6 +39,11 @@ public class DigestTest {
         payload = "hello".getBytes();
     }
 
+    @Test
+    public void testInstantiation() {
+        Digest digest = new Digest();
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testDigestWithSha256OnNull() {
         output = Digest.digestWithSha256(null);

@@ -24,6 +24,11 @@ import static org.junit.Assert.*;
 public class AesKeyGeneratorTest {
 
     @Test
+    public void testInstantiation() {
+        AesKeyGenerator generator = new AesKeyGenerator();
+    }
+
+    @Test
     public void testGenerateKeyOnNegativeAndSmallLengths() {
         for (int i = -10; i < AesKeyGenerator.MINIMAL_KEY_LENGTH_IN_BYTES; i++) {
             try {
