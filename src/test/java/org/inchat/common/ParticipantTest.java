@@ -18,7 +18,8 @@
  */
 package org.inchat.common;
 
-import java.util.UUID;
+import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
+import org.inchat.common.crypto.EccKeyPairGenerator;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -26,40 +27,39 @@ import org.junit.Before;
 public class ParticipantTest {
 
     private Participant participant;
-    private UUID id;
+    private AsymmetricCipherKeyPair keyPair;
 
     @Before
     public void setUp() {
-        participant = new Participant();
-        id = UUID.randomUUID();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetIdOnNull() {
-        participant.setId(null);
-    }
-
-    @Test
-    public void testSetId() {
-        participant.setId(id);
-        assertEquals(id, participant.id);
+        participant = new Participant(new byte[Participant.ID_LENGTH_IN_BYTES]);
+        keyPair = EccKeyPairGenerator.generate();
     }
 
     @Test
     public void testGetId() {
-        participant.id = id;
-        assertEquals(id, participant.getId());
-    }
-
-    @Test
-    public void testAdditionalConstructor() {
-        participant = new Participant(id);
-        assertEquals(id, participant.getId());
+        assertSame(participant.id, participant.getId());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNullConstructor() {
         participant = new Participant(null);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetKeyPairOnNull() {
+        participant.setKeyPair(null);
+    }
+    
+    @Test
+    public void testSetKeyPair() {
+        participant.setKeyPair(keyPair);
+        assertSame(keyPair, participant.keyPair);
+    }
+    
+    @Test
+    public void testGetKeyPair() {
+        participant.keyPair = keyPair;
+        assertSame(keyPair, participant.getKeyPair());
     }
 
 }

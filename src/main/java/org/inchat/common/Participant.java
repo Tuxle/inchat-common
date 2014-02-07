@@ -18,7 +18,7 @@
  */
 package org.inchat.common;
 
-import java.util.UUID;
+import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 
 /**
  * Represents a instance in the network that does something with messages. For
@@ -26,35 +26,32 @@ import java.util.UUID;
  */
 public class Participant {
 
-    UUID id;
+    public final static int ID_LENGTH_IN_BYTES = 256 / 8;
 
-    public Participant() {
-    }
+    byte[] id;
+    AsymmetricCipherKeyPair keyPair;
 
-    public Participant(UUID id) {
-        if (id == null) {
-            throw new IllegalArgumentException("The agument may not be null.");
+    public Participant(byte[] id) {
+        if (id == null || id.length != ID_LENGTH_IN_BYTES) {
+            throw new IllegalArgumentException("The agument may not be null and it has to be exactly " + ID_LENGTH_IN_BYTES + " bytes in length.");
         }
 
         this.id = id;
     }
 
-    /**
-     * Sets the id.
-     *
-     * @param id
-     * @throws IllegalArgumentException If the argument is null.
-     */
-    public void setId(UUID id) {
-        if (id == null) {
-            throw new IllegalArgumentException("The argument may not be null.");
-        }
-
-        this.id = id;
-    }
-
-    public UUID getId() {
+    public byte[] getId() {
         return id;
     }
 
+    public void setKeyPair(AsymmetricCipherKeyPair keyPair) {
+        if (keyPair == null) {
+            throw new IllegalArgumentException("The argument may not be null.");
+        }
+
+        this.keyPair = keyPair;
+    }
+
+    public AsymmetricCipherKeyPair getKeyPair() {
+        return keyPair;
+    }
 }
