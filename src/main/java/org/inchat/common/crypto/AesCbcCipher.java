@@ -48,7 +48,7 @@ public class AesCbcCipher implements Cipher {
      */
     public AesCbcCipher(byte[] initializationVector, byte[] key) {
         if (!isInitializationVectorValid(initializationVector) || !isKeyValid(key)) {
-            throw new IllegalArgumentException("The arguments may not be null.");
+            throw new IllegalArgumentException("The arguments may not be null, key has to be 16, 24 or 32 bytes long.");
         }
 
         initParameters(initializationVector, key);
