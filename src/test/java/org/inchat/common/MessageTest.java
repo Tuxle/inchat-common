@@ -18,6 +18,7 @@
  */
 package org.inchat.common;
 
+import org.inchat.common.crypto.ParticipantIdGenerator;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -25,6 +26,7 @@ import org.junit.Before;
 public class MessageTest {
 
     private Message message;
+    private String version;
     private Participant participant;
     private byte[] initializationVector;
     private byte[] key;
@@ -34,11 +36,24 @@ public class MessageTest {
     @Before
     public void setUp() {
         message = new Message();
-        participant = new Participant();
+        version = "1.2a";
+        participant = new Participant(ParticipantIdGenerator.generateId());
         initializationVector = new byte[0];
         key = new byte[0];
         mac = new byte[0];
         content = new byte[0];
+    }
+
+    @Test
+    public void testSetVersion() {
+        message.setVersion(version);
+        assertEquals(version, message.version);
+    }
+
+    @Test
+    public void testGetVersion() {
+        message.version = version;
+        assertEquals(version, message.getVersion());
     }
 
     @Test(expected = IllegalArgumentException.class)

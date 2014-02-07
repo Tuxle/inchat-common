@@ -25,11 +25,20 @@ package org.inchat.common;
  */
 public class Message {
 
+    String version;
     Participant participant;
     byte[] initializationVector;
     byte[] key;
     byte[] content;
     byte[] mac;
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getVersion() {
+        return version;
+    }
 
     /**
      * Sets the participant.
