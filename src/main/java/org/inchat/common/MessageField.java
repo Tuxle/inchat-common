@@ -19,14 +19,21 @@
 package org.inchat.common;
 
 public enum MessageField {
-
+    // Version
     VRS("VRS"),
+    // Participant
     PRT("PRT"),
+    // Parameter ...
     PRM("PRM"),
+    // Initial Vector
     PRM_IV("IV"),
+    // Message Key
     PRM_KEY("KEY"),
+    // Message Authent
     PRM_MAC("MAC"),
+    // Encrypted Message
     CNT("CNT"),
+    // Decrypted Message
     CNT_MSG("MSG");
 
     private final String value;
