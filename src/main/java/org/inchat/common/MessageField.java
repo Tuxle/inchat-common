@@ -29,7 +29,7 @@ public enum MessageField {
     PRM_IV("IV"),
     // Message Key
     PRM_KEY("KEY"),
-    // Message Authent
+    // Message Authentication Code
     PRM_MAC("MAC"),
     // Encrypted Message
     CNT("CNT"),
